@@ -1,28 +1,28 @@
 package com.abutua.product_backend.resources;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.abutua.product_backend.models.Product;
+
+import jakarta.annotation.PostConstruct;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 public class ProductController {
-    
-    @GetMapping("product")
-    public Product getProduct(){
-        Product p = new Product();
-        p.setId(1);
-        p.setName("Nome do Produto");
-        p.setPrice(100);
-        return p;
-    }
 
-    @GetMapping("products")
-    public List<Product> getProducts(){
+    private List<Product> products = new ArrayList<>();
+
+    @PostConstruct // Chama o método init() após a construção de ProductController
+    public void init() {
         Product p1 = new Product();
         p1.setId(1);
         p1.setName("Nome do Produto 01");
@@ -38,11 +38,27 @@ public class ProductController {
         p3.setName("Nome do Produto 03");
         p3.setPrice(300);
 
-        List<Product> productsList = new ArrayList<>();
-        productsList.add(p1);
-        productsList.add(p2);
-        productsList.add(p3);
+        products.add(p1);
+        products.add(p2);
+        products.add(p3);
+    }
 
-        return productsList;
+    @GetMapping("products/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable int id) {
+        // if(id <= products.size()){
+        // return ResponseEntity.ok(products.get(id - 1));
+        // } else{
+        // throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found");
+        // }
+
+        Product product = products.stream().filter(p -> p.getId() == id).findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found"));
+        
+        return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("products")
+    public List<Product> getProducts() {
+        return products;
     }
 }

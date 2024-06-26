@@ -8,6 +8,7 @@ import com.abutua.product_backend.models.Product;
 import jakarta.annotation.PostConstruct;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -18,27 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 public class ProductController {
 
-    private List<Product> products = new ArrayList<>();
-
-    @PostConstruct // Chama o método init() após a construção de ProductController
-    public void init() {
-        Product p1 = new Product(1, "Nome do Produto 01", 100);
-        Product p2 = new Product(2, "Nome do Produto 02", 200);
-        Product p3 = new Product(3, "Nome do Produto 03", 300);
-
-        products.add(p1);
-        products.add(p2);
-        products.add(p3);
-    }
+    private List<Product> products = Arrays.asList( new Product(1, "Nome do Produto 01", 100), 
+                                                    new Product(2, "Nome do Produto 02", 200),
+                                                    new Product(3, "Nome do Produto 03", 300));
 
     @GetMapping("products/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable int id) {
-        // if(id <= products.size()){
-        // return ResponseEntity.ok(products.get(id - 1));
-        // } else{
-        // throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found");
-        // }
-
         Product product = products.stream().filter(p -> p.getId() == id).findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found"));
         

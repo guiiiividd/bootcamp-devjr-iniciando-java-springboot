@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,20 +22,9 @@ public class ProductController {
 
     @PostConstruct // Chama o método init() após a construção de ProductController
     public void init() {
-        Product p1 = new Product();
-        p1.setId(1);
-        p1.setName("Nome do Produto 01");
-        p1.setPrice(100);
-
-        Product p2 = new Product();
-        p2.setId(2);
-        p2.setName("Nome do Produto 02");
-        p2.setPrice(200);
-
-        Product p3 = new Product();
-        p3.setId(3);
-        p3.setName("Nome do Produto 03");
-        p3.setPrice(300);
+        Product p1 = new Product(1, "Nome do Produto 01", 100);
+        Product p2 = new Product(2, "Nome do Produto 02", 200);
+        Product p3 = new Product(3, "Nome do Produto 03", 300);
 
         products.add(p1);
         products.add(p2);
